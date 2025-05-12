@@ -5,7 +5,7 @@ import Sidebar from "@/components/Sidebar";
 
 export default function ClientLayout({ children }) {
     const pathname = usePathname();
-    const hideSidebarRoutes = ["/login"];
+    const hideSidebarRoutes = ["/"];
 
     const showSidebar = !hideSidebarRoutes.includes(pathname);
 
