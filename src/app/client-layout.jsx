@@ -10,7 +10,7 @@ export default function ClientLayout({ children }) {
     const showSidebar = !hideSidebarRoutes.includes(pathname);
 
     return (
-        <div className="flex min-h-screen">
+        <div className="flex">
             {showSidebar && <Sidebar />}
             <main className="flex-1 p-4">{children}</main>
         </div>

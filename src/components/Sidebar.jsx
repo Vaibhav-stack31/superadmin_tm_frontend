@@ -52,7 +52,7 @@ const Sidebar = () => {
     }, []);
 
     return (
-        <aside className="bg-[#FBFCFD] shadow-[1px_0px_4px_rgba(0,0,0,0.4)] h-screen w-20 md:w-72 p-4 md:p-6 rounded-r-2xl flex flex-col items-center sticky top-0 transition-all duration-300">
+        <aside className="bg-[#FBFCFD] shadow-[1px_0px_4px_rgba(0,0,0,0.4)] h-[100dvh] w-20 md:w-72 p-4 md:p-6 rounded-r-2xl flex flex-col items-center sticky top-0 transition-all duration-300">
             <ul className="flex flex-col gap-y-6 w-full">
                 {navLinks.map(({ label, href, getIcon }) => {
                     const isActive = pathname === href;

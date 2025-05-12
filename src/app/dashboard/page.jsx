@@ -3,14 +3,14 @@ import { BarChartBig } from "lucide-react";
 
 export default function DashboardPage() {
   return (
-    <div className="p-6 w-full">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Dashboard</h1>
+    <div className="p-4 md:p-6 w-full">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-2">
+        <h1 className="text-2xl md:text-3xl font-bold">Dashboard</h1>
         <span className="text-gray-600 font-medium">SUPER ADMIN</span>
       </div>
 
       {/* Cards Row */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <Card title="Total Clients" value="120" />
         <Card title="Active Users" value="1,580" />
         <Card title="Monthly Revenue" value="$12,540" />
@@ -18,7 +18,7 @@ export default function DashboardPage() {
       </div>
 
       {/* License Usage & Analytics */}
-      <div className="grid grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <div className="col-span-1 bg-white p-4 rounded-lg shadow">
           <h1 className="font-semibold mb-3 text-xl">License Usage</h1>
           <button className="bg-blue-600 text-white px-4 py-2 rounded mb-4 cursor-pointer">
@@ -29,7 +29,7 @@ export default function DashboardPage() {
           <UsageBar label="Premium" percent={20} />
         </div>
 
-        <div className="col-span-2 bg-white p-4 rounded-lg shadow">
+        <div className="col-span-1 lg:col-span-2 bg-white p-4 rounded-lg shadow">
           <h1 className="font-semibold mb-3 text-xl">Analytics & Logs</h1>
           <p className="text-sm text-gray-500 mb-2">System-wide Usage</p>
           <div className="w-full h-40 bg-gray-100 rounded flex items-center justify-center text-gray-400">
@@ -40,9 +40,9 @@ export default function DashboardPage() {
       </div>
 
       {/* Clients Table */}
-      <div className="bg-white p-4 rounded-lg shadow">
+      <div className="bg-white p-4 rounded-lg shadow overflow-x-auto">
         <h1 className="font-semibold mb-4 text-xl">Clients</h1>
-        <table className="w-full text-md">
+        <table className="min-w-[600px] w-full text-md">
           <thead>
             <tr className="text-left text-gray-500">
               <th className="py-2">Name</th>
