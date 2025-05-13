@@ -13,7 +13,7 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <Card title="Total Clients" value="120" />
         <Card title="Active Users" value="1,580" />
-        <Card title="Monthly Revenue" value="$12,540" />
+        <Card title="Monthly Revenue" value="INR 12,540" />
         <Card title="New Signups" value="32" />
       </div>
 
