@@ -29,15 +29,15 @@ export default function ClientDetails() {
     try {
       const backendStatus = STATUS_MAP[statusLabel];
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/compnayRegister/status`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/companyRegister/status`,
         { params: { status: backendStatus } }
       );
-      
+
       const clientData = response.data.companies || [];
       setClients(clientData);
-      
+
       // Extract unique plans for filtering
-      const plans = [...new Set(clientData.map(client => 
+      const plans = [...new Set(clientData.map(client =>
         client.planPreferences?.desiredPlan).filter(Boolean))];
       setAvailablePlans(plans);
     } catch (err) {
@@ -51,11 +51,11 @@ export default function ClientDetails() {
   const handleAction = async (id, newStatus) => {
     try {
       await axios.patch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/compnayRegister/updateStatus/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/companyRegister/updateStatus/${id}`,
         { status: newStatus },
         { headers: { "Content-Type": "application/json" } }
       );
-      
+
       // Refresh the client list
       fetchClients(activeTab);
     } catch (error) {
@@ -66,12 +66,12 @@ export default function ClientDetails() {
 
   // Filter clients based on search term and plan filter
   const filteredClients = clients.filter(client => {
-    const matchesSearch = searchTerm === "" || 
+    const matchesSearch = searchTerm === "" ||
       client.companyInfo.companyName.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesPlan = filterPlan === "" || 
+
+    const matchesPlan = filterPlan === "" ||
       client.planPreferences?.desiredPlan === filterPlan;
-    
+
     return matchesSearch && matchesPlan;
   });
 
@@ -84,8 +84,8 @@ export default function ClientDetails() {
     <main className="flex-1 p-6 bg-gray-50 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Client Management</h2>
-        <button 
-          onClick={() => fetchClients(activeTab)} 
+        <button
+          onClick={() => fetchClients(activeTab)}
           className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded text-gray-700"
         >
           <RefreshCcw size={16} />
@@ -99,11 +99,10 @@ export default function ClientDetails() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 rounded-md transition-all duration-200 font-medium ${
-              activeTab === tab 
-                ? "bg-white text-blue-700 shadow-sm" 
+            className={`px-4 py-2 rounded-md transition-all duration-200 font-medium ${activeTab === tab
+                ? "bg-white text-blue-700 shadow-sm"
                 : "text-gray-600 hover:bg-gray-200"
-            }`}
+              }`}
           >
             {tab}
           </button>
@@ -172,13 +171,12 @@ export default function ClientDetails() {
                     <td className="px-6 py-4">{client.planPreferences?.desiredPlan || "N/A"}</td>
                     <td className="px-6 py-4">
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                          client.status === "Active"
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${client.status === "Active"
                             ? "bg-green-100 text-green-700"
                             : client.status === "Pending"
-                            ? "bg-yellow-100 text-yellow-700"
-                            : "bg-red-100 text-red-700"
-                        }`}
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
                       >
                         {REVERSE_STATUS_MAP[client.status] || client.status}
                       </span>
@@ -220,7 +218,7 @@ export default function ClientDetails() {
                     colSpan={activeTab === "Pending" ? 7 : 6}
                     className="px-6 py-8 text-center text-gray-500"
                   >
-                    {searchTerm || filterPlan 
+                    {searchTerm || filterPlan
                       ? "No matching clients found. Try adjusting your search or filters."
                       : `No ${activeTab.toLowerCase()} clients found.`}
                   </td>
@@ -228,7 +226,7 @@ export default function ClientDetails() {
               )}
             </tbody>
           </table>
-          
+
           <div className="px-6 py-3 bg-gray-50 text-sm text-gray-500">
             Showing {filteredClients.length} of {clients.length} clients
           </div>
