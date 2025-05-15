@@ -29,7 +29,7 @@ export default function ClientDetails() {
     try {
       const backendStatus = STATUS_MAP[statusLabel];
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/compnayRegister/status`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/companyRegister/status`,
         { params: { status: backendStatus } }
       );
       
@@ -51,7 +51,7 @@ export default function ClientDetails() {
   const handleAction = async (id, newStatus) => {
     try {
       await axios.patch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/compnayRegister/updateStatus/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/companyRegister/updateStatus/${id}`,
         { status: newStatus },
         { headers: { "Content-Type": "application/json" } }
       );
