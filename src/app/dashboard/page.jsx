@@ -17,7 +17,7 @@ import {
 import axios from "axios";
 import { Toaster, toast } from "react-hot-toast";
 import { motion, AnimatePresence } from "framer-motion";
-import MonthlySignupsChart from "@/components/MonthlySignupsChart.jsx";
+import TimeRangeSignupsChart from "@/components/MonthlySignupsChart.jsx";
 
 export default function DashboardPage() {
   const [data, setData] = useState({ total: 0, companies: [] });
@@ -28,6 +28,7 @@ export default function DashboardPage() {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [showModal, setShowModal] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [timeRange, setTimeRange] = useState('monthly');
 
   // Filtered and paginated data
   const filteredClients = useMemo(() => {
@@ -86,8 +87,6 @@ export default function DashboardPage() {
     officialEmail: "",
     designation: "",
     phoneNumber: "",
-    password: "",
-    confirmPassword: "",
     desiredPlan: "Free",
     expectedStartDate: "",
     expectedUsers: "",
@@ -147,12 +146,6 @@ export default function DashboardPage() {
 
     const loadingToast = toast.loading("Registering new client...");
 
-    // Basic password match validation
-    if (form.password !== form.confirmPassword) {
-      toast.error("Passwords do not match!");
-      toast.dismiss(loadingToast);
-      return;
-    }
 
     const payload = {
       companyInfo: {
@@ -168,7 +161,6 @@ export default function DashboardPage() {
         officialEmail: form.officialEmail,
         designation: form.designation,
         phoneNumber: form.phoneNumber,
-        password: form.password,
       },
       planPreferences: {
         desiredPlan: form.desiredPlan,
@@ -212,8 +204,6 @@ export default function DashboardPage() {
           officialEmail: "",
           designation: "",
           phoneNumber: "",
-          password: "",
-          confirmPassword: "",
           desiredPlan: "Free",
           expectedStartDate: "",
           expectedUsers: "",
@@ -254,8 +244,8 @@ export default function DashboardPage() {
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              transition={{ type: "spring", damping: 25 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ type: "spring" }}
               className="bg-white p-6 rounded-lg shadow-xl w-full max-w-3xl relative max-h-[95vh] overflow-y-auto"
             >
               <button
@@ -380,28 +370,6 @@ export default function DashboardPage() {
                         name="phoneNumber"
                         required
                         value={form.phoneNumber}
-                        onChange={handleChange}
-                        className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm text-gray-600 block mb-1">Create Password *</label>
-                      <input
-                        name="password"
-                        type="password"
-                        required
-                        value={form.password}
-                        onChange={handleChange}
-                        className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm text-gray-600 block mb-1">Confirm Password *</label>
-                      <input
-                        name="confirmPassword"
-                        type="password"
-                        required
-                        value={form.confirmPassword}
                         onChange={handleChange}
                         className="border border-gray-300 px-3 py-2 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
@@ -606,13 +574,34 @@ export default function DashboardPage() {
           transition={{ delay: 0.4 }}
           className="col-span-1 lg:col-span-2 bg-white p-6 rounded-lg shadow-sm border border-gray-100"
         >
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
             <h2 className="font-semibold text-xl text-gray-800">Analytics & Logs</h2>
-            <span className="text-sm text-gray-500">System-wide Usage</span>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <select
+                  className="border border-gray-300 pl-3 pr-8 py-1.5 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none bg-white"
+                  value={timeRange}
+                  onChange={(e) => setTimeRange(e.target.value)}
+                >
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
           </div>
+
           <div className="w-full h-48 bg-white rounded-lg border border-gray-200 p-4">
-            <MonthlySignupsChart companies={data.companies || []} />
+            <TimeRangeSignupsChart
+              companies={data.companies || []}
+              timeRange={timeRange}
+            />
           </div>
+
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
               <div className="text-lg font-semibold text-blue-800">{data.companies?.length || 0}</div>
@@ -749,8 +738,7 @@ export default function DashboardPage() {
               <button
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                 disabled={currentPage === 1}
-                className={`px-3 py-1 border rounded flex items-center ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'hover:bg-gray-50'
-                  }`}
+                className={`px-3 py-1 border rounded flex items-center ${currentPage === 1 ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'hover:bg-gray-50'}`}
               >
                 <ChevronLeft className="w-4 h-4 mr-1" />
                 Prev
@@ -778,8 +766,7 @@ export default function DashboardPage() {
                   <button
                     key={pageNum}
                     onClick={() => setCurrentPage(pageNum)}
-                    className={`px-3 py-1 border rounded ${currentPage === pageNum ? 'bg-blue-600 text-white' : 'hover:bg-gray-50'
-                      }`}
+                    className={`px-3 py-1 border rounded ${currentPage === pageNum ? 'bg-blue-600 text-white' : 'hover:bg-gray-50'}`}
                   >
                     {pageNum}
                   </button>
@@ -789,8 +776,7 @@ export default function DashboardPage() {
               <button
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                 disabled={currentPage === totalPages}
-                className={`px-3 py-1 border rounded flex items-center ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'hover:bg-gray-50'
-                  }`}
+                className={`px-3 py-1 border rounded flex items-center ${currentPage === totalPages ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'hover:bg-gray-50'}`}
               >
                 Next
                 <ChevronRight className="w-4 h-4 ml-1" />

@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   BarChart,
   Bar,
@@ -7,24 +8,46 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from 'recharts';
-import { parseISO, format } from 'date-fns';
+import { parseISO, format, getYear } from 'date-fns';
 
-const getMonthlySignups = (companies = []) => {
+// Function to get data based on the selected time range
+const getSignupsByTimeRange = (companies = [], timeRange) => {
   const grouped = {};
 
   companies.forEach(company => {
     const date = company.createdAt;
     if (!date) return;
 
-    const monthKey = format(parseISO(date), 'yyyy-MM');
-    grouped[monthKey] = (grouped[monthKey] || 0) + 1;
+    const parsedDate = parseISO(date);
+    let key;
+
+    if (timeRange === 'monthly') {
+      key = format(parsedDate, 'yyyy-MM');
+
+      grouped[key] = grouped[key] || {
+        label: format(parsedDate, 'MMM yyyy'),
+        signups: 0
+      };
+      grouped[key].signups += 1;
+    }
+    else if (timeRange === 'yearly') {
+      key = format(parsedDate, 'yyyy');
+
+      grouped[key] = grouped[key] || {
+        label: format(parsedDate, 'yyyy'),
+        signups: 0
+      };
+      grouped[key].signups += 1;
+    }
   });
 
+  // Sort keys chronologically
   const sortedKeys = Object.keys(grouped).sort();
 
-  return sortedKeys.map(month => ({
-    month: format(parseISO(`${month}-01`), 'MMM yyyy'),
-    signups: grouped[month],
+  // Convert to array format for chart
+  return sortedKeys.map(key => ({
+    period: grouped[key].label,
+    signups: grouped[key].signups,
   }));
 };
 
@@ -38,34 +61,41 @@ const CustomTooltip = ({ active, payload, label }) => {
   );
 };
 
-const MonthlySignupsChart = ({ companies }) => {
-  const data = getMonthlySignups(companies);
+const TimeRangeSignupsChart = ({ companies, timeRange }) => {
+  const data = getSignupsByTimeRange(companies, timeRange);
+
+  const getChartTitle = () => {
+    return timeRange === 'yearly' ? 'Yearly Signups' : 'Monthly Signups';
+  };
 
   return (
-    <ResponsiveContainer width="100%" height={200}>
-      <BarChart data={data} margin={{ top: 10, right: 30, left: 10, bottom: 0 }}>
-        <CartesianGrid strokeDasharray="2 4" vertical={false} stroke="#e5e7eb" />
-        <XAxis
-          dataKey="month"
-          tick={{ fontSize: 12, fill: '#6b7280' }}
-          axisLine={false}
-          tickLine={false}
-        />
-        <YAxis
-          tick={{ fontSize: 12, fill: '#6b7280' }}
-          axisLine={false}
-          tickLine={false}
-        />
-        <Tooltip content={<CustomTooltip />} />
-        <Bar
-          dataKey="signups"
-          fill="#6366f1"
-          radius={[6, 6, 0, 0]}
-          barSize={30}
-        />
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="w-full h-full">
+      <h3 className="text-sm font-medium text-gray-600 mb-2">{getChartTitle()}</h3>
+      <ResponsiveContainer width="100%" height={160}>
+        <BarChart data={data} margin={{ top: 5, right: 10, left: 10, bottom: 20 }}>
+          <CartesianGrid strokeDasharray="2 4" vertical={false} stroke="#e5e7eb" />
+          <XAxis
+            dataKey="period"
+            tick={{ fontSize: 12, fill: '#6b7280' }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            tick={{ fontSize: 12, fill: '#6b7280' }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar
+            dataKey="signups"
+            fill="#6366f1"
+            radius={[6, 6, 0, 0]}
+            barSize={timeRange === 'yearly' ? 40 : 30}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 
-export default MonthlySignupsChart;
+export default TimeRangeSignupsChart;

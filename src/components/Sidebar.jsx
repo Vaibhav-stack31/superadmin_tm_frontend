@@ -26,11 +26,6 @@ const navLinks = [
         getIcon: (active) => (active ? <FaUser /> : <FaRegUser />),
     },
     {
-        label: "Analytics & Logs",
-        href: "/analytics",
-        getIcon: (active) => (active ? <IoAnalyticsSharp /> : <IoAnalytics />),
-    },
-    {
         label: "Logout",
         href: "/logout",
         getIcon: (active) =>
@@ -40,7 +35,7 @@ const navLinks = [
 
 const Sidebar = () => {
     const pathname = usePathname();
-
+    
     useGSAP(() => {
         gsap.from(".sidebar-item", {
             opacity: 0,
