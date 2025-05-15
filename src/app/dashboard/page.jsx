@@ -99,7 +99,7 @@ export default function DashboardPage() {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/compnayRegister/getAllCompanies`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/companyRegister/getAllCompanies`,
         {
           withCredentials: true,
         }
@@ -181,7 +181,7 @@ export default function DashboardPage() {
 
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API}/compnayRegister/register`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/companyRegister/register`,
         payload,
         {
           headers: {
