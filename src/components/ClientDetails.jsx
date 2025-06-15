@@ -53,6 +53,7 @@ export default function ClientDetails() {
       await axios.patch(
         `${process.env.NEXT_PUBLIC_BACKEND_API}/companyRegister/updateStatus/${id}`,
         { status: newStatus },
+        {withCredentials: true},
         { headers: { "Content-Type": "application/json" } }
       );
       
