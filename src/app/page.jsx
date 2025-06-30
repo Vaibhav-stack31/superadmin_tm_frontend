@@ -25,7 +25,7 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        "http://localhost:4110/api/superadmin/login",
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/superadmin/login`,
         { email, password },
         { withCredentials: true }
       );
